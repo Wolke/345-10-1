@@ -2,6 +2,7 @@
 const line = require("@line/bot-sdk");
 const config = require("./const");
 const client = new line.Client(config);
+const addUser = require("./store");
 var sendMessage = () => {
   // 'Ubfcbff3466d011fa291050bb5cd73c0c'
   client.pushMessage("Cda80a04d303abb785fe21a9c2b706a8e", {
@@ -43,7 +44,7 @@ async function handle(event) {
   ) {
     let p = await client.getProfile(event.source.userId);
     //save data
-
+    await addUser(event.source.userId);
     return { type: "text", text: `好的，${p.displayName} 一組` };
   }
   return { type: "text", text: event.message.text };

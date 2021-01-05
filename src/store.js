@@ -1,9 +1,9 @@
 // sheets
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 
-const getStore = async (p) => {
+const addUser = async (userId) => {
   const doc = new GoogleSpreadsheet(
-    "1KU0PsZ2udpWjwGy1aw8uajHzM1IGMHidcf26O88hJWA"
+    "1rKZEOzNVjJF2GX4cK0fIwNwYEzODBI9qRpHCgTcha4o"
   );
 
   doc.useServiceAccountAuth({
@@ -13,14 +13,12 @@ const getStore = async (p) => {
 
   await doc.loadInfo();
 
-  // console.log(doc.title);
+  console.log(doc.title);
   let sheet = doc.sheetsById[0];
-
-  return sheet;
+  console.log(userId);
+  sheet.addRow({ userId });
+  // return sheet;
 };
+// addUser();
 
-module.exports = async (p) => {
-  let ary = [];
-  ary = await getStore(p);
-  return ary;
-};
+module.exports = addUser;
