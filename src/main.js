@@ -43,8 +43,10 @@ async function handle(event) {
     event.message.text === "我要一組好棒棒電鍋"
   ) {
     let p = await client.getProfile(event.source.userId);
+
     //save data
-    await addUser(event.source.userId);
+
+    await addUser(p);
     return { type: "text", text: `好的，${p.displayName} 一組` };
   }
   return { type: "text", text: event.message.text };

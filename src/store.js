@@ -1,7 +1,9 @@
 // sheets
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 
-const addUser = async (userId) => {
+const addUser = async (p) => {
+  let { userId, displayName, pictureUrl } = p;
+
   const doc = new GoogleSpreadsheet(
     "1rKZEOzNVjJF2GX4cK0fIwNwYEzODBI9qRpHCgTcha4o"
   );
@@ -13,10 +15,19 @@ const addUser = async (userId) => {
 
   await doc.loadInfo();
 
-  console.log(doc.title);
+  // console.log(doc.title);
   let sheet = doc.sheetsById[0];
-  console.log(userId);
-  sheet.addRow({ userId });
+  // console.log(userId);
+  await sheet.loadCells("A1:D1");
+  let c = await sheet.getCell(0, 3);
+
+  c.formula = `=MATCH("${userId}",A:A,0)`;
+  await sheet.saveUpdatedCells();
+  if (c.value > 0) {
+  } else {
+    await sheet.addRow({ userId, displayName, pictureUrl });
+  }
+
   // return sheet;
 };
 // addUser();
