@@ -3,6 +3,7 @@ const line = require("@line/bot-sdk");
 const express = require("express");
 const config = require("./const");
 const handle = require("./main");
+const { addUser } = require("./store");
 
 // create LINE SDK config from env variables
 
@@ -42,10 +43,9 @@ app.post("/callback", line.middleware(config), (req, res) => {
 
 // event handler
 async function handleEvent(event) {
-  console.log(event);
-
   if (event.type !== "message" || event.message.type !== "text") {
     // ignore non-text-message event
+
     return Promise.resolve(null);
   }
 
