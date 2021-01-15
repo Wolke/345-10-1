@@ -3,7 +3,7 @@ const line = require("@line/bot-sdk");
 const express = require("express");
 const config = require("./const");
 const handle = require("./main");
-const { addUser } = require("./store");
+const { getStoreList } = require("./store");
 
 // create LINE SDK config from env variables
 
@@ -16,7 +16,10 @@ app.get("/", (req, rep) => {
   rep.end("hello!!");
 });
 
-app.get("/store");
+app.get("/store-list", async (req, rep) => {
+  let list = await getStoreList();
+  rep.json(list);
+});
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc

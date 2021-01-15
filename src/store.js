@@ -1,7 +1,6 @@
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 
-const addUser = async (p) => {
-  let { userId, displayName } = p;
+const getSheetById = async (id) => {
   const doc = new GoogleSpreadsheet(
     "1rKZEOzNVjJF2GX4cK0fIwNwYEzODBI9qRpHCgTcha4o"
   );
@@ -11,7 +10,12 @@ const addUser = async (p) => {
   });
   await doc.loadInfo();
 
-  let sheet = doc.sheetsById[0];
+  let sheet = doc.sheetsById[id];
+  return sheet;
+};
+const addUser = async (p) => {
+  let { userId, displayName } = p;
+  let sheet = getSheetById(0);
   await sheet.loadCells("A1:D1");
   let c = sheet.getCell(0, 3);
   c.formula = `=MATCH("${userId}",A:A,0)`;
@@ -22,3 +26,10 @@ const addUser = async (p) => {
   }
 };
 exports.addUser = addUser;
+
+const getStoreList = async () => {
+  let sheet = getSheetById(1281292141);
+  sheet.loadCells();
+};
+
+exports.getStoreList = getStoreList;
