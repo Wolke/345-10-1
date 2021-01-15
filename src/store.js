@@ -28,8 +28,26 @@ const addUser = async (p) => {
 exports.addUser = addUser;
 
 const getStoreList = async () => {
-  let sheet = getSheetById(1281292141);
-  sheet.loadCells();
+  let sheet = await getSheetById(1281292141);
+  await sheet.loadCells(`A1:F1`);
+  let c = sheet.getCell(0, 5);
+  c.formula = `=COUNTA(A:A)`;
+  await sheet.saveUpdatedCells();
+  // const rows = await sheet.getRows({ offset: 1 });
+  console.log(c.value);
+  let cnt = c.value;
+
+  let list = [];
+  await sheet.loadCells(`A1:D${cnt}`);
+  for (let i = 1; i < cnt; i++) {
+    let name = await sheet.getCell(i, 0).value;
+    let tel = await sheet.getCell(i, 1).value;
+    let address = await sheet.getCell(i, 2).value;
+    let region = await sheet.getCell(i, 3).value;
+    list.push({ name, tel, address, region });
+  }
+  return list;
 };
+getStoreList();
 
 exports.getStoreList = getStoreList;
