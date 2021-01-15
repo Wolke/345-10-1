@@ -16,6 +16,8 @@ app.get("/", (req, rep) => {
   rep.end("hello!!");
 });
 
+app.get("/store");
+
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post("/callback", line.middleware(config), (req, res) => {
