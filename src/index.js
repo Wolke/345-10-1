@@ -24,16 +24,21 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname + "/../public/index.html"));
 });
 app.get("/store-list.html", async (req, rep) => {
-  let list = await getStoreList();
+  console.log("req.query", req.query);
+  let { region } = req.query;
+
+  let list = await getStoreList(region);
   rep.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
   rep.end(`<html>
   <head>
   <title>
-    hello
+    門市列表
   </title>
   </head>
   <body>
+  
   ${list.map((i) => `<li>${i.name} ${i.tel}</li>`)}
+  
   </body>
   
   </html>`);
