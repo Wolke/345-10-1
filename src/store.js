@@ -1,8 +1,9 @@
+const config = require("./const");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 
 const getSheetById = async (id) => {
   const doc = new GoogleSpreadsheet(
-    "1rKZEOzNVjJF2GX4cK0fIwNwYEzODBI9qRpHCgTcha4o"
+    "1nrPga89s1mZMQ2XyExjkio03FbfyGU28CEXVB1wdXeU"
   );
   doc.useServiceAccountAuth({
     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -28,7 +29,7 @@ const addUser = async (p) => {
 exports.addUser = addUser;
 
 const getStoreList = async () => {
-  let sheet = await getSheetById(1281292141);
+  let sheet = await getSheetById(1046710380);
   await sheet.loadCells(`A1:F1`);
   let c = sheet.getCell(0, 5);
   c.formula = `=COUNTA(A:A)`;
@@ -48,6 +49,25 @@ const getStoreList = async () => {
   }
   return list;
 };
-getStoreList();
+// getStoreList();
 
 exports.getStoreList = getStoreList;
+
+const getUserData = async (uid) => {
+  let sheet = await getSheetById(0);
+  await sheet.loadCells(`A1:A1`);
+  let c = sheet.getCell(0, 0);
+  c.formula = `=MATCH("${uid}",'會員表'!A:A,0)`;
+  await sheet.saveUpdatedCells();
+  let cnt = c.value;
+  console.log(cnt);
+  sheet = await getSheetById(2139820120);
+  const rows = await sheet.getRows({ limit: 1, offset: cnt - 2 });
+  // console.log(rows[0].displayName);
+  let { userId, displayName, linked, points } = rows[0];
+  console.log({ userId, displayName, linked, points });
+
+  return { userId, displayName, linked, points };
+};
+// getUserData("Ubfcbff3466d011fa291050bb5cd73c0c");
+exports.getUserData = getUserData;

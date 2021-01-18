@@ -4,7 +4,7 @@ const express = require("express");
 const config = require("./const");
 const handle = require("./main");
 const path = require("path");
-const { getStoreList } = require("./store");
+const { getStoreList, getUserData } = require("./store");
 
 // create LINE SDK config from env variables
 
@@ -36,17 +36,36 @@ app.get("/store-list.html", async (req, rep) => {
   </title>
   </head>
   <body>
-  
   ${list.map((i) => `<li>${i.name} ${i.tel}</li>`)}
-  
   </body>
-  
   </html>`);
 });
-
-app.get("/store-list", async (req, rep) => {
+app.get("/get-store-list", async (req, rep) => {
   let list = await getStoreList();
   rep.json(list);
+});
+
+app.get(`/get-user-data.html`, async (req, rep) => {
+  let { uid } = req.query;
+  let { displayName, points } = await getUserData(uid);
+
+  rep.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
+  rep.end(`<html>
+  <head>
+  <title>
+    會員 ${displayName}
+  </title>
+  </head>
+  <body>
+  ${displayName}
+  ${points} 點
+  </body>
+  </html>`);
+});
+app.get(`/get-user-data`, async (req, rep) => {
+  let { uid } = req.query;
+  let d = await getUserData(uid);
+  rep.json(d);
 });
 
 // register a webhook handler with middleware
